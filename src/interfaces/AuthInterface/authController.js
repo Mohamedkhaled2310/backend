@@ -1,8 +1,8 @@
 module.exports = (registerUser,loginUser) => ({
   register: async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const token = await registerUser({ email, password });
+      const { name,email, password,role } = req.body;
+      const token = await registerUser({ name,email, password,role});
       res.status(201).json({ token });
     } catch (err) {
       res.status(400).json({ error: err.message });
