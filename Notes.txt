@@ -1,0 +1,4 @@
+1. domain/ → Entities Layer
+2. usecases/ → Use Cases Layer (Application Logic)
+3. interfaces/ → Interface Adapters Layer (Controllers, Routes, DTOs)
+4. infrastructure/ → Frameworks & Drivers Layer (Gateways, DB, JWT, 3rd-party)

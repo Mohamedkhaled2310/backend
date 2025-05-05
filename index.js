@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 dotenv.config();
-const connectDB = require('./src/infrastructure/db'); 
+const connectDB = require('./src/infrastructure/mongodb/connection'); 
 const { authRoutes } = require('./src/conatainers/AuthContainer');
 const { appointmentRoutes } = require('./src/conatainers/AppointmentContainer');
 // Initializeation
