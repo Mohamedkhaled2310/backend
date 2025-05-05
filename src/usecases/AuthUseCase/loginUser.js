@@ -4,7 +4,6 @@ module.exports = (userRepo, tokenService, passwordHasher) => async ({ email, pas
   
     const isValid = await passwordHasher.compare(password, user.password);
     if (!isValid) throw new Error('Invalid password');
-  
-    return tokenService.generateToken({ id: user.id, email: user.email });
+    return { user: {id:user.id,name:user.name,email:user.email,role:user.role} ,token:tokenService.generateToken({ id: user.id, email: user.email })};
   };
   
