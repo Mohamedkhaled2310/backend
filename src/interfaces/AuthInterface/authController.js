@@ -1,7 +1,9 @@
+const { validateUserInput } = require('../validators/userValidator');
 module.exports = (registerUser,loginUser) => ({
   register: async (req, res) => {
     try {
-      const { name,email, password,role } = req.body;
+      const validatedData = validateUserInput(req.body);
+      const { name,email, password,role } = validatedData;
       const token = await registerUser({ name,email, password,role});
       res.status(201).json({ token });
     } catch (err) {
