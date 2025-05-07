@@ -6,7 +6,7 @@ module.exports = (userRepo, jwtService, bcryptHasher) => {
       const hashedPassword = await bcryptHasher.hash(password);
       const newUser = await userRepo.createUser({ name, email, password: hashedPassword, role});
   
-      return jwtService.generateToken({ id: newUser._id, email: newUser.email });
+      return {user: {id:newUser.id,name:newUser.name,email:newUser.email,role:newUser.role},token:jwtService.generateToken({ id: newUser._id, email: newUser.email })};
     };
   };
   

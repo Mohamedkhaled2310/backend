@@ -4,10 +4,16 @@ module.exports = (registerUser,loginUser) => ({
     try {
       const validatedData = validateUserInput(req.body);
       const { name,email, password,role } = validatedData;
-      const token = await registerUser({ name,email, password,role});
-      res.status(201).json({ token });
+      const register_data = await registerUser({ name,email, password,role});
+      res.cookie('token', register_data.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Strict', 
+        maxAge: 24 * 60 * 60 * 1000 // one day
+      });
+      res.status(200).json({user: register_data.user});
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(401).json({ error: err.message });
     }
   },
 

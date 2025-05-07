@@ -7,8 +7,16 @@ module.exports = (
   ) => {
     return {
       create: async (req, res) => {
+        const { doctorId, date, time, reason } = req.body;
+        const patientId = req.user.id;
+      
         try {
-          const appointment = await createAppointment(req.body);
+          const appointment = await createAppointment({ 
+          patient:patientId,
+          doctor:doctorId,
+          date,
+          reason,
+        });
           res.status(201).json(appointment);
         } catch (err) {
           res.status(400).json({ message: err.message });

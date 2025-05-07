@@ -6,6 +6,8 @@ const connectDB = require('./src/infrastructure/mongodb/connection');
 const { authRoutes } = require('./src/conatainers/AuthContainer');
 const { appointmentRoutes } = require('./src/conatainers/AppointmentContainer');
 const { authMiddleware } = require('./src/infrastructure/middleware/auth');
+const {billRoutes}  = require('./src/conatainers/BillContainer');
+const {userRoutes} =  require('./src/conatainers/UserContainer');
 // Initializeation
 const app = express();
 dotenv.config();
@@ -22,6 +24,8 @@ connectDB();
 // Routes
 app.use('/auth', authRoutes);
 app.use('/appointments',authMiddleware, appointmentRoutes);
+app.use('/bills', authMiddleware, billRoutes);
+app.use('/user', authMiddleware,userRoutes );
 const PORT = process.env.PORT || 5000;
 // console.log(process.env.PORT );
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

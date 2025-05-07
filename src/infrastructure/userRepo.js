@@ -1,20 +1,26 @@
 const UserModel = require('./mongodb/User'); 
 const UserEntity = require('../domain/UserEntity');
 
+function toEntity(userDoc) {
+  if (!userDoc) return null;
+
+  return new UserEntity({
+    id: userDoc._id,
+    name: userDoc.name,
+    email: userDoc.email,
+    password: userDoc.password,
+    role: userDoc.role,
+    createdAt: userDoc.createdAt,
+    updatedAt: userDoc.updatedAt
+  });
+}
+
 module.exports = {
   async findByEmail(email) {
     const userDoc = await UserModel.findOne({ email });
     if (!userDoc) return null;
     
-    return new UserEntity({
-      id: userDoc._id,
-      name: userDoc.name,
-      email: userDoc.email,
-      password: userDoc.password,
-      role: userDoc.role,
-      createdAt: userDoc.createdAt,
-      updatedAt: userDoc.updatedAt
-    });
+    return toEntity(userDoc);
   },
 
   async createUser(userData) {
@@ -29,14 +35,11 @@ module.exports = {
 
     const saved = await userDoc.save();
 
-    return new UserEntity({
-      id: saved._id,
-      name: saved.name,
-      email: saved.email,
-      password: saved.password,
-      role: saved.role,
-      createdAt: saved.createdAt,
-      updatedAt: saved.updatedAt
-    });
+    return toEntity(saved);
+  },
+  async getDoctors() {
+    // const doctorDocs = await UserModel.find({ role: 'doctor' });
+    // console.log(doctorDocs);
+    return await UserModel.find({ role: 'patient' }).select('_id name');
   }
 };
