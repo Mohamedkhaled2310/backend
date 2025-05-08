@@ -40,6 +40,6 @@ module.exports = {
   async getDoctors() {
     // const doctorDocs = await UserModel.find({ role: 'doctor' });
     // console.log(doctorDocs);
-    return await UserModel.find({ role: 'patient' }).select('_id name');
+    return await UserModel.find({ role: 'doctor' }).select('_id name');
   }
 };
