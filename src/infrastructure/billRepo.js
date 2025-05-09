@@ -28,7 +28,7 @@ module.exports = {
     const docs = await BillModel.find()
     .populate('patient', 'name')
     .populate('appointment', 'date reason');
-    console.log(docs);
+    // console.log(docs);
     return docs.map((doc) => ({
       ...toEntity(doc),
       appointmentReason: doc.appointment.reason,
@@ -42,8 +42,13 @@ module.exports = {
   },
 
   async getByPatient(patientId) {
-    const docs = await BillModel.find({ patient: patientId });
-    return docs.map(toEntity);
+    const docs = await BillModel.find({ patient: patientId })
+    .populate('appointment', 'date reason');
+    return docs.map((doc) => ({
+      ...toEntity(doc),
+      appointmentReason: doc.appointment.reason,
+      appointmentDate: doc.appointment.date,
+    }));
   },
 
   async updateBill(id, updates) {
