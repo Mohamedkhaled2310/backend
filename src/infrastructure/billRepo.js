@@ -3,11 +3,12 @@ const BillEntity = require('../domain/BillEntity');
 
 function toEntity(doc) {
   if (!doc) return null;
-
+  const appointment = typeof doc.appointment ==='object' ? doc.appointment._id.toString() : appointment.toString();
+  const patient = typeof doc.patient ==='object' ? doc.patient._id.toString() : patient.toString();
   return new BillEntity({
     id: doc._id.toString(),
-    appointment: doc.appointment,
-    patient: doc.patient,
+    appointment: appointment,
+    patient: patient,
     amount: doc.amount,
     paid: doc.paid,
     paymentMethod: doc.paymentMethod,
@@ -23,7 +24,18 @@ module.exports = {
     const saved = await bill.save();
     return toEntity(saved);
   },
-
+  async getAllBills() {
+    const docs = await BillModel.find()
+    .populate('patient', 'name')
+    .populate('appointment', 'date reason');
+    console.log(docs);
+    return docs.map((doc) => ({
+      ...toEntity(doc),
+      appointmentReason: doc.appointment.reason,
+      appointmentDate: doc.appointment.date,
+      patientName: doc.patient.name,
+    }));
+  },
   async getById(id) {
     const doc = await BillModel.findById(id);
     return toEntity(doc);

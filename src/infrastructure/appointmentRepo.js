@@ -55,7 +55,6 @@ module.exports = {
 
   async getAllAppointment() {
     const docs = await AppointmentModel.find().populate('doctor patient', 'name name');
-    console.log(docs);
     return docs.map((doc) => ({
       ...toEntity(doc),
       doctorName: doc.doctor.name,
