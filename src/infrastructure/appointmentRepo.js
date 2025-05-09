@@ -3,10 +3,14 @@ const Appointment = require('../domain/AppointmentEntity');
 
 function toEntity(doc) {
   if (!doc) return null;
+
+  const doctorId = typeof doc.doctor === 'object' ? doc.doctor._id.toString() : doc.doctor.toString();
+  const patientId = typeof doc.patient === 'object' ? doc.patient._id.toString() : doc.patient.toString();
+
   return new Appointment({
     id: doc._id.toString(),
-    patientId: doc.patient.toString(),
-    doctorId: doc.doctor.toString(),
+    patientId,
+    doctorId,
     date: doc.date,
     reason: doc.reason,
     status: doc.status,
@@ -14,6 +18,7 @@ function toEntity(doc) {
     updatedAt: doc.updatedAt,
   });
 }
+
 
 module.exports = {
   async createAppointment(data) {
@@ -28,8 +33,14 @@ module.exports = {
   },
 
   async findByPatient(patientId) {
-    const docs = await AppointmentModel.find({ patient: patientId });
-    return docs.map(toEntity);
+    const docs = await AppointmentModel
+      .find({ patient: patientId })
+      .populate('doctor', 'name');
+  
+    return docs.map((doc) => ({
+      ...toEntity(doc),
+      doctorName: doc.doctor.name,
+    }));
   },
 
   async updateStatus(id, status) {

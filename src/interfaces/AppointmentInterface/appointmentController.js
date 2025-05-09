@@ -25,7 +25,7 @@ module.exports = (
   
       getByDoctor: async (req, res) => {
         try {
-          const doctorId = req.params.id;
+          const doctorId = req.user.id;
           const appointments = await getAppointmentsByDoctor(doctorId);
           res.status(200).json(appointments);
         } catch (err) {
@@ -35,8 +35,9 @@ module.exports = (
   
       getByPatient: async (req, res) => {
         try {
-          const patientId = req.params.id;
+          const patientId = req.user.id;
           const appointments = await getAppointmentsByPatient(patientId);
+          console.log(appointments);
           res.status(200).json(appointments);
         } catch (err) {
           res.status(500).json({ message: err.message });
