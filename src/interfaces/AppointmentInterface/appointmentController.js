@@ -4,6 +4,7 @@ module.exports = (
     getAppointmentsByPatient,
     updateAppointmentStatus,
     deleteAppointment,
+    getAllAppointment
   ) => {
     return {
       create: async (req, res) => {
@@ -37,6 +38,16 @@ module.exports = (
         try {
           const patientId = req.user.id;
           const appointments = await getAppointmentsByPatient(patientId);
+          console.log(appointments);
+          res.status(200).json(appointments);
+        } catch (err) {
+          res.status(500).json({ message: err.message });
+        }
+      },
+      getAllAppointment: async (req, res) => {
+        try {
+          
+          const appointments = await getAllAppointment();
           console.log(appointments);
           res.status(200).json(appointments);
         } catch (err) {

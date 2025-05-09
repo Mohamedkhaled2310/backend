@@ -28,8 +28,13 @@ module.exports = {
   },
 
   async findByDoctor(doctorId) {
-    const docs = await AppointmentModel.find({ doctor: doctorId });
-    return docs.map(toEntity);
+    const docs = await AppointmentModel
+    .find({ doctor: doctorId })
+    .populate('patient', 'name');
+    return docs.map((doc) => ({
+      ...toEntity(doc),
+      patientName: doc.patient.name,
+    }));
   },
 
   async findByPatient(patientId) {
@@ -48,6 +53,15 @@ module.exports = {
     return toEntity(updated);
   },
 
+  async getAllAppointment() {
+    const docs = await AppointmentModel.find().populate('doctor patient', 'name name');
+    console.log(docs);
+    return docs.map((doc) => ({
+      ...toEntity(doc),
+      doctorName: doc.doctor.name,
+      patientName: doc.patient.name,
+    }));
+  },
   async deleteAppointment(id) {
     const deleted = await AppointmentModel.findByIdAndDelete(id);
     return toEntity(deleted);
